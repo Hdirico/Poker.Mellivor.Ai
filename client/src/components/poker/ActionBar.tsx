@@ -68,8 +68,8 @@ export function ActionBar({
       )}
       data-testid="action-bar"
     >
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between gap-6">
+      <div className="flex justify-center">
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
@@ -107,8 +107,8 @@ export function ActionBar({
             )}
           </div>
 
-          <div className="flex-1 flex items-center gap-6">
-            <div className="flex-[2] px-2 min-w-[200px]">
+          <div className="flex items-center gap-6">
+            <div className="w-[240px]">
               <Slider
                 value={[raiseAmount]}
                 onValueChange={([val]) => setRaiseAmount(val)}
