@@ -48,7 +48,7 @@ export function PlayingCard({
         className={cn(
           "rounded-lg border-2 border-zinc-500/40 flex items-center justify-center overflow-hidden",
           "transition-all duration-200",
-          isDark ? "bg-zinc-800" : "bg-zinc-100",
+          isDark ? "bg-zinc-800" : "bg-white",
           sizeClasses[size],
           className
         )}
