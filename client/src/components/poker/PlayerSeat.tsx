@@ -16,6 +16,8 @@ interface PlayerSeatProps {
   cards?: Card[];
   isActive?: boolean;
   isDealer?: boolean;
+  isBigBlind?: boolean;
+  isSmallBlind?: boolean;
   isFolded?: boolean;
   bet?: number;
   position: "top" | "top-left" | "top-right" | "left" | "right" | "bottom-left" | "bottom-right" | "bottom";
@@ -52,6 +54,8 @@ export function PlayerSeat({
   cards,
   isActive = false,
   isDealer = false,
+  isBigBlind = false,
+  isSmallBlind = false,
   isFolded = false,
   bet,
   position,
@@ -118,11 +122,23 @@ export function PlayerSeat({
       >
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-foreground">{name}</span>
-          {isDealer && (
-            <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
-              D
-            </span>
-          )}
+          <div className="flex items-center gap-1">
+            {isDealer && (
+              <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                D
+              </span>
+            )}
+            {isBigBlind && (
+              <span className="w-5 h-5 rounded-full bg-amber-500 text-white text-[9px] font-bold flex items-center justify-center">
+                BB
+              </span>
+            )}
+            {isSmallBlind && (
+              <span className="w-5 h-5 rounded-full bg-sky-500 text-white text-[9px] font-bold flex items-center justify-center">
+                SB
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-1.5 mt-0.5">
           <span className="font-mono text-xs text-muted-foreground">

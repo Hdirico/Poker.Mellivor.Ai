@@ -19,6 +19,8 @@ interface Player {
   cards?: Card[];
   isActive?: boolean;
   isDealer?: boolean;
+  isBigBlind?: boolean;
+  isSmallBlind?: boolean;
   isFolded?: boolean;
   bet?: number;
   position: "top" | "top-left" | "top-right" | "left" | "right" | "bottom-left" | "bottom-right" | "bottom";
