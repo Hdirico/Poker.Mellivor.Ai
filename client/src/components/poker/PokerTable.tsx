@@ -50,19 +50,23 @@ export function PokerTable({
     >
       <div className={cn(
         "absolute inset-12 rounded-[100px] border-2 border-zinc-500/40 overflow-hidden",
-        isDark ? "bg-zinc-900" : "bg-zinc-200"
+        isDark ? "bg-zinc-900" : "bg-slate-100"
       )}>
         <div 
-          className="absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden"
+          className={cn(
+            "absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden",
+            isDark ? "bg-zinc-900" : "bg-slate-50"
+          )}
           style={{
             backgroundImage: `url(${isDark ? tableFeltDark : tableFeltLight})`,
-            backgroundSize: 'cover',
+            backgroundSize: 'contain',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
         >
           <div className={cn(
             "absolute inset-0",
-            isDark ? "bg-black/30" : "bg-white/20"
+            isDark ? "bg-black/30" : "bg-white/10"
           )} />
         </div>
       </div>
