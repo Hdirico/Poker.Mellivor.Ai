@@ -28,7 +28,7 @@ export function CommunityCards({ cards, className }: CommunityCardsProps) {
           key={i}
           initial={{ 
             y: -200, 
-            rotate: -90,
+            rotate: -360,
             opacity: 0 
           }}
           animate={{ 

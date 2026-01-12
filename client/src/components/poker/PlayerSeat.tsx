@@ -65,7 +65,7 @@ export function PlayerSeat({
             initial={{ 
               y: -300, 
               x: 0,
-              rotate: -180,
+              rotate: -360,
               opacity: 0 
             }}
             animate={{ 
