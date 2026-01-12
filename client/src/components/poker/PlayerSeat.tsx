@@ -35,6 +35,17 @@ const positionClasses: Record<string, string> = {
   "bottom": "bottom-0 left-1/2 -translate-x-1/2",
 };
 
+const dealOrigin: Record<string, { x: number; y: number }> = {
+  "top": { x: 0, y: 200 },
+  "top-left": { x: 150, y: 150 },
+  "top-right": { x: -150, y: 150 },
+  "left": { x: 250, y: 0 },
+  "right": { x: -250, y: 0 },
+  "bottom-left": { x: 150, y: -150 },
+  "bottom-right": { x: -150, y: -150 },
+  "bottom": { x: 0, y: -200 },
+};
+
 export function PlayerSeat({
   name,
   chips,
@@ -63,8 +74,8 @@ export function PlayerSeat({
           <motion.div
             key={i}
             initial={{ 
-              y: -300, 
-              x: 0,
+              y: dealOrigin[position].y,
+              x: dealOrigin[position].x,
               rotate: -360,
               opacity: 0 
             }}
