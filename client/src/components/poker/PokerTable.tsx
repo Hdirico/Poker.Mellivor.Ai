@@ -56,8 +56,9 @@ export function PokerTable({
           className="absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden"
           style={{
             backgroundImage: `url(${isDark ? tableFeltDark : tableFeltLight})`,
-            backgroundSize: 'cover',
+            backgroundSize: isDark ? 'cover' : '80% auto',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
         >
           <div className={cn(
