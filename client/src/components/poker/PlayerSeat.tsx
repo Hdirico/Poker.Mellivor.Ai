@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { PlayingCard } from "./PlayingCard";
+import { motion } from "framer-motion";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -59,14 +60,35 @@ export function PlayerSeat({
     >
       <div className="flex gap-1">
         {cards?.map((card, i) => (
-          <PlayingCard
+          <motion.div
             key={i}
-            suit={showCards ? card.suit : undefined}
-            rank={showCards ? card.rank : undefined}
-            faceDown={!showCards}
-            size="sm"
-            isDark={isDark}
-          />
+            initial={{ 
+              y: -300, 
+              x: 0,
+              rotate: -180,
+              opacity: 0 
+            }}
+            animate={{ 
+              y: 0, 
+              x: 0,
+              rotate: 0,
+              opacity: 1 
+            }}
+            transition={{ 
+              type: "spring",
+              stiffness: 100,
+              damping: 15,
+              delay: i * 0.15 + 0.2
+            }}
+          >
+            <PlayingCard
+              suit={showCards ? card.suit : undefined}
+              rank={showCards ? card.rank : undefined}
+              faceDown={!showCards}
+              size="sm"
+              isDark={isDark}
+            />
+          </motion.div>
         )) ?? (
           <>
             <div className="w-10 h-14 rounded-lg border border-dashed border-zinc-500/40" />

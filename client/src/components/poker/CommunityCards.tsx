@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { PlayingCard } from "./PlayingCard";
+import { motion } from "framer-motion";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -23,12 +24,31 @@ export function CommunityCards({ cards, className }: CommunityCardsProps) {
       data-testid="community-cards"
     >
       {cards.map((card, i) => (
-        <PlayingCard
+        <motion.div
           key={i}
-          suit={card.suit}
-          rank={card.rank}
-          size="lg"
-        />
+          initial={{ 
+            y: -200, 
+            rotate: -90,
+            opacity: 0 
+          }}
+          animate={{ 
+            y: 0, 
+            rotate: 0,
+            opacity: 1 
+          }}
+          transition={{ 
+            type: "spring",
+            stiffness: 120,
+            damping: 14,
+            delay: i * 0.12
+          }}
+        >
+          <PlayingCard
+            suit={card.suit}
+            rank={card.rank}
+            size="lg"
+          />
+        </motion.div>
       ))}
       {Array.from({ length: emptySlots }).map((_, i) => (
         <div 
