@@ -59,7 +59,7 @@ export function PokerTable({
           )}
           style={{
             backgroundImage: `url(${isDark ? tableFeltDark : tableFeltLight})`,
-            backgroundSize: 'contain',
+            backgroundSize: isDark ? 'cover' : 'contain',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
           }}
