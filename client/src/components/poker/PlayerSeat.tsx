@@ -19,6 +19,7 @@ interface PlayerSeatProps {
   bet?: number;
   position: "top" | "top-left" | "top-right" | "left" | "right" | "bottom-left" | "bottom-right" | "bottom";
   showCards?: boolean;
+  isDark?: boolean;
   className?: string;
 }
 
@@ -43,6 +44,7 @@ export function PlayerSeat({
   bet,
   position,
   showCards = false,
+  isDark = true,
   className,
 }: PlayerSeatProps) {
   return (
@@ -63,6 +65,7 @@ export function PlayerSeat({
             rank={showCards ? card.rank : undefined}
             faceDown={!showCards}
             size="sm"
+            isDark={isDark}
           />
         )) ?? (
           <>

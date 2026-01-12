@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import cardBackImage from "@assets/mellivorai_star_(1)_1768250248315.png";
+import cardBackDark from "@assets/mellivorai_star_(1)_1768250248315.png";
+import cardBackLight from "@assets/Screenshot_2026-01-12_at_3.45.52_PM_1768250765979.png";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -9,6 +10,7 @@ interface PlayingCardProps {
   rank?: Rank;
   faceDown?: boolean;
   size?: "sm" | "md" | "lg";
+  isDark?: boolean;
   className?: string;
 }
 
@@ -37,21 +39,23 @@ export function PlayingCard({
   rank = "A", 
   faceDown = false,
   size = "md",
+  isDark = true,
   className 
 }: PlayingCardProps) {
   if (faceDown) {
     return (
       <div 
         className={cn(
-          "rounded-lg bg-zinc-800 border-2 border-zinc-500/40 flex items-center justify-center overflow-hidden",
+          "rounded-lg border-2 border-zinc-500/40 flex items-center justify-center overflow-hidden",
           "transition-all duration-200",
+          isDark ? "bg-zinc-800" : "bg-zinc-100",
           sizeClasses[size],
           className
         )}
         data-testid="card-facedown"
       >
         <img 
-          src={cardBackImage} 
+          src={isDark ? cardBackDark : cardBackLight} 
           alt="Card back" 
           className="w-[60%] h-auto object-contain opacity-80"
         />

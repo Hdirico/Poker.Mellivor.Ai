@@ -7,12 +7,13 @@ import { SettingsDialog } from "./SettingsDialog";
 interface HeaderProps {
   tableName: string;
   blinds: string;
+  isDark: boolean;
+  onThemeChange: (isDark: boolean) => void;
   className?: string;
 }
 
-export function Header({ tableName, blinds, className }: HeaderProps) {
+export function Header({ tableName, blinds, isDark, onThemeChange, className }: HeaderProps) {
   const [isMuted, setIsMuted] = useState(false);
-  const [isDark, setIsDark] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
@@ -84,7 +85,7 @@ export function Header({ tableName, blinds, className }: HeaderProps) {
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
         isDark={isDark}
-        onThemeChange={setIsDark}
+        onThemeChange={onThemeChange}
       />
     </header>
   );

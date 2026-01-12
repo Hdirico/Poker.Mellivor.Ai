@@ -98,6 +98,7 @@ const mockCommunityCards: Card[] = [
 export default function Home() {
   const [pot] = useState(700);
   const [playerChips] = useState(2800);
+  const [isDark, setIsDark] = useState(true);
 
   const handleFold = () => {
     console.log("Fold");
@@ -117,13 +118,19 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background" data-testid="page-home">
-      <Header tableName="Main Table #1" blinds="50/100" />
+      <Header 
+        tableName="Main Table #1" 
+        blinds="50/100" 
+        isDark={isDark}
+        onThemeChange={setIsDark}
+      />
 
       <main className="flex-1 flex items-center justify-center p-8">
         <PokerTable
           players={mockPlayers}
           communityCards={mockCommunityCards}
           pot={pot}
+          isDark={isDark}
         />
       </main>
 

@@ -28,6 +28,7 @@ interface PokerTableProps {
   players: Player[];
   communityCards: Card[];
   pot: number;
+  isDark?: boolean;
   className?: string;
 }
 
@@ -35,6 +36,7 @@ export function PokerTable({
   players, 
   communityCards, 
   pot,
+  isDark = true,
   className 
 }: PokerTableProps) {
   return (
@@ -73,6 +75,7 @@ export function PokerTable({
         <PlayerSeat
           key={player.id}
           {...player}
+          isDark={isDark}
         />
       ))}
     </div>
