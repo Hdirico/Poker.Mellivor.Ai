@@ -21,9 +21,6 @@ const mockPlayers = [
       { suit: "heart" as Suit, rank: "K" as Rank },
     ],
     isActive: false,
-    isDealer: false,
-    isBigBlind: false,
-    isSmallBlind: false,
     isFolded: false,
     bet: 100,
     position: "top-left" as const,
@@ -38,9 +35,6 @@ const mockPlayers = [
       { suit: "diamond" as Suit, rank: "Q" as Rank },
     ],
     isActive: false,
-    isDealer: true,
-    isBigBlind: false,
-    isSmallBlind: false,
     isFolded: false,
     bet: 200,
     position: "top-right" as const,
@@ -55,9 +49,6 @@ const mockPlayers = [
       { suit: "heart" as Suit, rank: "10" as Rank },
     ],
     isActive: false,
-    isDealer: false,
-    isBigBlind: false,
-    isSmallBlind: true,
     isFolded: false,
     bet: 0,
     position: "right" as const,
@@ -72,9 +63,6 @@ const mockPlayers = [
       { suit: "spade" as Suit, rank: "K" as Rank },
     ],
     isActive: true,
-    isDealer: false,
-    isBigBlind: true,
-    isSmallBlind: false,
     isFolded: false,
     bet: 100,
     position: "bottom" as const,
@@ -89,9 +77,6 @@ const mockPlayers = [
       { suit: "club" as Suit, rank: "8" as Rank },
     ],
     isActive: false,
-    isDealer: false,
-    isBigBlind: false,
-    isSmallBlind: false,
     isFolded: false,
     bet: 100,
     position: "left" as const,
@@ -105,14 +90,29 @@ const mockCommunityCards: Card[] = [
   { suit: "spade", rank: "2" },
 ];
 
+const positionOrder = ["top-left", "top-right", "right", "bottom", "left"] as const;
+
 export default function Home() {
   const [pot] = useState(700);
   const [playerChips] = useState(2800);
   const [isDark, setIsDark] = useState(true);
   const [dealKey, setDealKey] = useState(0);
+  const [dealerIndex, setDealerIndex] = useState(1);
 
   const handleDeal = () => {
     setDealKey(prev => prev + 1);
+    setDealerIndex(prev => (prev + 1) % positionOrder.length);
+  };
+
+  const getPlayerRoles = (position: string) => {
+    const posIndex = positionOrder.indexOf(position as typeof positionOrder[number]);
+    const sbIndex = (dealerIndex + 1) % positionOrder.length;
+    const bbIndex = (dealerIndex + 2) % positionOrder.length;
+    return {
+      isDealer: posIndex === dealerIndex,
+      isSmallBlind: posIndex === sbIndex,
+      isBigBlind: posIndex === bbIndex,
+    };
   };
 
   const handleFold = () => {
@@ -144,7 +144,10 @@ export default function Home() {
       <main className="flex-1 flex items-center justify-center p-8">
         <PokerTable
           key={dealKey}
-          players={mockPlayers}
+          players={mockPlayers.map(p => ({
+            ...p,
+            ...getPlayerRoles(p.position),
+          }))}
           communityCards={mockCommunityCards}
           pot={pot}
           isDark={isDark}
