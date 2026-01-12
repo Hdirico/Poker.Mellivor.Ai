@@ -118,9 +118,9 @@ export function ActionBar({
                 className="w-full"
                 data-testid="slider-raise"
               />
-              <div className="flex justify-between mt-1 text-xs text-muted-foreground font-mono">
-                <span>{minBet.toLocaleString()}</span>
-                <span>{maxBet.toLocaleString()}</span>
+              <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                <span>Min: <span className="font-mono">{minBet.toLocaleString()}</span></span>
+                <span>All-in: <span className="font-mono">{playerChips.toLocaleString()}</span></span>
               </div>
             </div>
 
