@@ -53,6 +53,8 @@ export function PokerTable({
   isDark = true,
   className 
 }: PokerTableProps) {
+  const dealerPlayer = players.find(p => p.isDealer);
+  const dealerPosition = dealerPlayer?.position || "top-right";
   return (
     <div 
       className={cn(
@@ -104,7 +106,7 @@ export function PokerTable({
           {...player}
           isDark={isDark}
           dealOrder={dealOrderByPosition[player.position] ?? 0}
-          dealerPosition="top-right"
+          dealerPosition={dealerPosition}
         />
       ))}
     </div>
