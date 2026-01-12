@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import cardBackImage from "@assets/mellivorai_star_(1)_1768250248315.png";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -42,14 +43,18 @@ export function PlayingCard({
     return (
       <div 
         className={cn(
-          "rounded-lg bg-secondary border-2 border-zinc-500/40 flex items-center justify-center",
+          "rounded-lg bg-zinc-800 border-2 border-zinc-500/40 flex items-center justify-center overflow-hidden",
           "transition-all duration-200",
           sizeClasses[size],
           className
         )}
         data-testid="card-facedown"
       >
-        <div className="w-[70%] h-[80%] rounded bg-muted border border-zinc-500/30" />
+        <img 
+          src={cardBackImage} 
+          alt="Card back" 
+          className="w-[60%] h-auto object-contain opacity-80"
+        />
       </div>
     );
   }
