@@ -63,19 +63,19 @@ export function ActionBar({
   return (
     <div 
       className={cn(
-        "bg-card/95 backdrop-blur-sm border-t-2 border-zinc-500/40 p-4",
+        "bg-card/95 backdrop-blur-sm border-t-2 border-zinc-500/40 px-6 py-5",
         className
       )}
       data-testid="action-bar"
     >
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
             <Button
               variant="outline"
               size="lg"
               onClick={onFold}
-              className="px-6 text-muted-foreground hover:text-foreground hover:border-destructive/50"
+              className="px-8 text-muted-foreground hover:text-foreground hover:border-destructive/50"
               data-testid="button-fold"
             >
               Fold
@@ -86,7 +86,7 @@ export function ActionBar({
                 variant="outline"
                 size="lg"
                 onClick={onCheck}
-                className="px-6"
+                className="px-8"
                 data-testid="button-check"
               >
                 Check
@@ -96,7 +96,7 @@ export function ActionBar({
                 variant="outline"
                 size="lg"
                 onClick={onCall}
-                className="px-6"
+                className="px-8"
                 data-testid="button-call"
               >
                 Call
@@ -107,8 +107,8 @@ export function ActionBar({
             )}
           </div>
 
-          <div className="flex-1 flex items-center gap-4">
-            <div className="flex-1 px-4">
+          <div className="flex-1 flex items-center gap-6">
+            <div className="flex-1 px-2">
               <Slider
                 value={[raiseAmount]}
                 onValueChange={([val]) => setRaiseAmount(val)}
@@ -124,14 +124,14 @@ export function ActionBar({
               </div>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               {quickBetAmounts.map((bet) => (
                 <Button
                   key={bet.label}
                   variant="ghost"
                   size="sm"
                   onClick={() => setRaiseAmount(bet.value)}
-                  className="text-xs text-muted-foreground hover:text-foreground"
+                  className="text-xs px-3 text-muted-foreground hover:text-foreground"
                   data-testid={`button-quick-${bet.label.toLowerCase().replace(/\s/g, '-')}`}
                 >
                   {bet.label}
@@ -189,7 +189,7 @@ export function ActionBar({
               variant="default"
               size="lg"
               onClick={() => onRaise(raiseAmount)}
-              className="px-6 min-w-[120px]"
+              className="px-8 min-w-[140px]"
               data-testid="button-raise"
             >
               Raise
@@ -200,7 +200,7 @@ export function ActionBar({
           </div>
         </div>
 
-        <div className="mt-3 flex items-center justify-center gap-6 text-xs text-muted-foreground">
+        <div className="mt-4 flex items-center justify-center gap-8 text-sm text-muted-foreground">
           <span>
             Pot: <span className="font-mono text-foreground">{currentBet.toLocaleString()}</span>
           </span>
