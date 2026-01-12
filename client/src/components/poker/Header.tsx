@@ -38,7 +38,7 @@ export function Header({ tableName, blinds, isDark, onThemeChange, className }: 
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
           {isDark ? (
-            <img src={logoDark} alt="Mellipoker.Ai" className="w-8 h-8 rounded-lg object-cover" />
+            <img src={logoDark} alt="Mellipoker.Ai" className="h-8 w-auto rounded object-contain" />
           ) : (
             <div className="w-8 h-8 rounded-lg bg-primary border border-zinc-400/30 flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">M</span>
