@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
-import { Settings, HelpCircle, Volume2, VolumeX, Sun, Moon } from "lucide-react";
+import { Settings, HelpCircle, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { SettingsDialog } from "./SettingsDialog";
 
 interface HeaderProps {
   tableName: string;
@@ -12,6 +13,7 @@ interface HeaderProps {
 export function Header({ tableName, blinds, className }: HeaderProps) {
   const [isMuted, setIsMuted] = useState(false);
   const [isDark, setIsDark] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     if (isDark) {
@@ -70,12 +72,20 @@ export function Header({ tableName, blinds, className }: HeaderProps) {
         <Button
           variant="ghost"
           size="icon"
+          onClick={() => setSettingsOpen(true)}
           className="text-muted-foreground hover:text-foreground"
           data-testid="button-settings"
         >
           <Settings className="w-4 h-4" />
         </Button>
       </div>
+
+      <SettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        isDark={isDark}
+        onThemeChange={setIsDark}
+      />
     </header>
   );
 }
