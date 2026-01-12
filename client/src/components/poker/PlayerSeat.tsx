@@ -66,18 +66,18 @@ export function PlayerSeat({
           />
         )) ?? (
           <>
-            <div className="w-10 h-14 rounded-lg border border-dashed border-border/50" />
-            <div className="w-10 h-14 rounded-lg border border-dashed border-border/50" />
+            <div className="w-10 h-14 rounded-lg border border-dashed border-zinc-500/40" />
+            <div className="w-10 h-14 rounded-lg border border-dashed border-zinc-500/40" />
           </>
         )}
       </div>
 
       <div 
         className={cn(
-          "px-4 py-2 rounded-lg border transition-all duration-300",
+          "px-4 py-2 rounded-lg border-2 transition-all duration-300",
           isActive 
-            ? "bg-card border-primary/50 ring-2 ring-primary/20" 
-            : "bg-secondary/80 border-border"
+            ? "bg-card border-zinc-400/60 ring-2 ring-zinc-400/20" 
+            : "bg-secondary/80 border-zinc-500/40"
         )}
       >
         <div className="flex items-center gap-2">
@@ -96,7 +96,7 @@ export function PlayerSeat({
       </div>
 
       {bet !== undefined && bet > 0 && (
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-muted rounded text-xs font-mono text-muted-foreground">
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-muted border border-zinc-500/40 rounded text-xs font-mono text-muted-foreground">
           {bet.toLocaleString()}
         </div>
       )}

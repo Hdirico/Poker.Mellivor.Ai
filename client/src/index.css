@@ -119,18 +119,18 @@
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .08);
-  --badge-outline: rgba(255,255,255, .04);
+  --button-outline: rgba(255,255,255, .12);
+  --badge-outline: rgba(255,255,255, .08);
   --opaque-button-border-intensity: 9;
   --elevate-1: rgba(255,255,255, .03);
   --elevate-2: rgba(255,255,255, .06);
 
   --background: 220 16% 6%;
   --foreground: 220 10% 94%;
-  --border: 220 12% 14%;
+  --border: 220 8% 28%;
   --card: 220 16% 8%;
   --card-foreground: 220 10% 94%;
-  --card-border: 220 12% 14%;
+  --card-border: 220 8% 30%;
   --sidebar: 220 16% 7%;
   --sidebar-foreground: 220 10% 94%;
   --sidebar-border: 220 12% 14%;
@@ -152,8 +152,8 @@
   --accent-foreground: 220 10% 94%;
   --destructive: 0 62% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 220 12% 18%;
-  --ring: 220 10% 40%;
+  --input: 220 8% 32%;
+  --ring: 220 10% 45%;
   --chart-1: 220 70% 55%;
   --chart-2: 160 60% 50%;
   --chart-3: 30 80% 60%;

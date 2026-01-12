@@ -42,14 +42,14 @@ export function PlayingCard({
     return (
       <div 
         className={cn(
-          "rounded-lg bg-secondary border border-border flex items-center justify-center",
+          "rounded-lg bg-secondary border-2 border-zinc-500/40 flex items-center justify-center",
           "transition-all duration-200",
           sizeClasses[size],
           className
         )}
         data-testid="card-facedown"
       >
-        <div className="w-[70%] h-[80%] rounded bg-muted border border-border/50" />
+        <div className="w-[70%] h-[80%] rounded bg-muted border border-zinc-500/30" />
       </div>
     );
   }
@@ -57,8 +57,8 @@ export function PlayingCard({
   return (
     <div 
       className={cn(
-        "rounded-lg bg-card border border-border relative",
-        "transition-all duration-200 hover:border-muted-foreground/30",
+        "rounded-lg bg-card border-2 border-zinc-500/50 relative",
+        "transition-all duration-200 hover:border-zinc-400/60",
         sizeClasses[size],
         suitColors[suit],
         className

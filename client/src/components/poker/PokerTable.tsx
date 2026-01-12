@@ -44,14 +44,14 @@ export function PokerTable({
       )}
       data-testid="poker-table"
     >
-      <div className="absolute inset-12 rounded-[100px] bg-secondary/50 border border-border">
-        <div className="absolute inset-4 rounded-[80px] bg-muted/30 border border-border/50" />
+      <div className="absolute inset-12 rounded-[100px] bg-secondary/50 border-2 border-zinc-500/40">
+        <div className="absolute inset-4 rounded-[80px] bg-muted/30 border border-zinc-500/25" />
       </div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 pt-4">
         <CommunityCards cards={communityCards} />
         
-        <div className="px-4 py-2 rounded-lg bg-card/80 backdrop-blur-sm border border-border">
+        <div className="px-4 py-2 rounded-lg bg-card/80 backdrop-blur-sm border-2 border-zinc-500/40">
           <span className="text-xs text-muted-foreground">Pot</span>
           <span className="ml-2 font-mono text-lg text-foreground">
             {pot.toLocaleString()}

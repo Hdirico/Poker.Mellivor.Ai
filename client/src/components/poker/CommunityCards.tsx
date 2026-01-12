@@ -33,7 +33,7 @@ export function CommunityCards({ cards, className }: CommunityCardsProps) {
       {Array.from({ length: emptySlots }).map((_, i) => (
         <div 
           key={`empty-${i}`}
-          className="w-20 h-28 rounded-lg border border-dashed border-border/30"
+          className="w-20 h-28 rounded-lg border-2 border-dashed border-zinc-500/30"
         />
       ))}
     </div>

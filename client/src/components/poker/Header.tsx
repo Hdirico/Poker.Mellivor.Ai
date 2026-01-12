@@ -15,14 +15,14 @@ export function Header({ tableName, blinds, className }: HeaderProps) {
   return (
     <header 
       className={cn(
-        "flex items-center justify-between px-6 py-3 border-b border-border bg-card/50 backdrop-blur-sm",
+        "flex items-center justify-between px-6 py-3 border-b-2 border-zinc-500/40 bg-card/50 backdrop-blur-sm",
         className
       )}
       data-testid="header"
     >
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-primary border border-zinc-400/30 flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">O</span>
           </div>
           <span className="font-semibold tracking-tight">Offsuit</span>

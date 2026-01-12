@@ -41,7 +41,7 @@ export function ActionBar({
   return (
     <div 
       className={cn(
-        "bg-card/95 backdrop-blur-sm border-t border-border p-4",
+        "bg-card/95 backdrop-blur-sm border-t-2 border-zinc-500/40 p-4",
         className
       )}
       data-testid="action-bar"
