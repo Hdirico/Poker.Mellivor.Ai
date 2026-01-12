@@ -50,12 +50,12 @@ export function PokerTable({
     >
       <div className={cn(
         "absolute inset-12 rounded-[100px] border-2 border-zinc-500/40 overflow-hidden",
-        isDark ? "bg-zinc-900" : "bg-[#f8f8f8]"
+        isDark ? "bg-zinc-900" : "bg-white"
       )}>
         <div 
           className={cn(
             "absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden",
-            isDark ? "bg-zinc-900" : "bg-[#f8f8f8]"
+            isDark ? "bg-zinc-900" : "bg-white"
           )}
           style={{
             backgroundImage: `url(${isDark ? tableFeltDark : tableFeltLight})`,
