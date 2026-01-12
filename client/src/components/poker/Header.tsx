@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Settings, HelpCircle, Volume2, VolumeX } from "lucide-react";
+import { Settings, HelpCircle, Volume2, VolumeX, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { SettingsDialog } from "./SettingsDialog";
@@ -11,10 +11,11 @@ interface HeaderProps {
   blinds: string;
   isDark: boolean;
   onThemeChange: (isDark: boolean) => void;
+  onDeal?: () => void;
   className?: string;
 }
 
-export function Header({ tableName, blinds, isDark, onThemeChange, className }: HeaderProps) {
+export function Header({ tableName, blinds, isDark, onThemeChange, onDeal, className }: HeaderProps) {
   const [isMuted, setIsMuted] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -56,7 +57,20 @@ export function Header({ tableName, blinds, isDark, onThemeChange, className }: 
         </div>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
+        {onDeal && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onDeal}
+            className="gap-2"
+            data-testid="button-deal"
+          >
+            <PlayCircle className="w-4 h-4" />
+            Deal
+          </Button>
+        )}
+        <div className="flex items-center gap-1">
         <Button
           variant="ghost"
           size="icon"
@@ -83,6 +97,7 @@ export function Header({ tableName, blinds, isDark, onThemeChange, className }: 
         >
           <Settings className="w-4 h-4" />
         </Button>
+        </div>
       </div>
 
       <SettingsDialog

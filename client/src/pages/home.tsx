@@ -99,6 +99,11 @@ export default function Home() {
   const [pot] = useState(700);
   const [playerChips] = useState(2800);
   const [isDark, setIsDark] = useState(true);
+  const [dealKey, setDealKey] = useState(0);
+
+  const handleDeal = () => {
+    setDealKey(prev => prev + 1);
+  };
 
   const handleFold = () => {
     console.log("Fold");
@@ -123,10 +128,12 @@ export default function Home() {
         blinds="50/100" 
         isDark={isDark}
         onThemeChange={setIsDark}
+        onDeal={handleDeal}
       />
 
       <main className="flex-1 flex items-center justify-center p-8">
         <PokerTable
+          key={dealKey}
           players={mockPlayers}
           communityCards={mockCommunityCards}
           pot={pot}
