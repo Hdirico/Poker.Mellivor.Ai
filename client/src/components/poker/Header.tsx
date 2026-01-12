@@ -3,6 +3,7 @@ import { Settings, HelpCircle, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { SettingsDialog } from "./SettingsDialog";
+import logoDark from "@assets/Screenshot_2026-01-12_at_3.38.57_PM_1768252434541.png";
 
 interface HeaderProps {
   tableName: string;
@@ -36,9 +37,13 @@ export function Header({ tableName, blinds, isDark, onThemeChange, className }: 
     >
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary border border-zinc-400/30 flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">M</span>
-          </div>
+          {isDark ? (
+            <img src={logoDark} alt="Mellipoker.Ai" className="w-8 h-8 rounded-lg object-cover" />
+          ) : (
+            <div className="w-8 h-8 rounded-lg bg-primary border border-zinc-400/30 flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-sm">M</span>
+            </div>
+          )}
           <span className="font-semibold tracking-tight">Mellipoker.Ai</span>
         </div>
 
