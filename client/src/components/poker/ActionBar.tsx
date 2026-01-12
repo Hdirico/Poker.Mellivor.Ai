@@ -85,16 +85,13 @@ export function ActionBar({
               {betAmounts.map((amount) => (
                 <Button
                   key={amount}
-                  variant={raiseAmount === amount ? "secondary" : "outline"}
+                  variant="outline"
                   size="sm"
-                  onClick={() => setRaiseAmount(amount)}
-                  className={cn(
-                    "px-4 font-mono text-sm",
-                    raiseAmount === amount && "ring-2 ring-primary/50"
-                  )}
+                  onClick={() => setRaiseAmount(prev => Math.min(prev + amount, maxBet))}
+                  className="px-4 font-mono text-sm"
                   data-testid={`button-bet-${amount}`}
                 >
-                  {amount}
+                  +{amount}
                 </Button>
               ))}
             </div>
