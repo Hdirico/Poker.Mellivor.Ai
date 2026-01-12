@@ -87,7 +87,7 @@ export function ActionBar({
               variant="outline"
               size="lg"
               onClick={onFold}
-              className="px-8 text-muted-foreground hover:text-foreground hover:border-destructive/50"
+              className="px-8 text-red-500 border-red-500/50 hover:bg-red-500/10 hover:text-red-400 hover:border-red-400"
               data-testid="button-fold"
             >
               Fold
