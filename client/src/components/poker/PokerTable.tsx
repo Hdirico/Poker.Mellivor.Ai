@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { PlayerSeat } from "./PlayerSeat";
 import { CommunityCards } from "./CommunityCards";
+import tableFeltImage from "@assets/Screenshot_2026-01-12_at_3.38.57_PM_1768250366126.png";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -44,8 +45,17 @@ export function PokerTable({
       )}
       data-testid="poker-table"
     >
-      <div className="absolute inset-12 rounded-[100px] bg-secondary/50 border-2 border-zinc-500/40">
-        <div className="absolute inset-4 rounded-[80px] bg-muted/30 border border-zinc-500/25" />
+      <div className="absolute inset-12 rounded-[100px] bg-zinc-900 border-2 border-zinc-500/40 overflow-hidden">
+        <div 
+          className="absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden"
+          style={{
+            backgroundImage: `url(${tableFeltImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
       </div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 pt-4">
