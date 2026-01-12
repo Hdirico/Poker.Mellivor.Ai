@@ -160,7 +160,7 @@ export default function Home() {
         onCheck={handleCheck}
         onCall={handleCall}
         onRaise={handleRaise}
-        canCheck={false}
+        canCheck={true}
         callAmount={100}
       />
     </div>
