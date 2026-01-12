@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import { PlayerSeat } from "./PlayerSeat";
 import { CommunityCards } from "./CommunityCards";
-import tableFeltImage from "@assets/Screenshot_2026-01-12_at_3.38.57_PM_1768250366126.png";
+import tableFeltDark from "@assets/Screenshot_2026-01-12_at_3.38.57_PM_1768250366126.png";
+import tableFeltLight from "@assets/Screenshot_2026-01-12_at_3.47.57_PM_1768250909531.png";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
@@ -47,16 +48,22 @@ export function PokerTable({
       )}
       data-testid="poker-table"
     >
-      <div className="absolute inset-12 rounded-[100px] bg-zinc-900 border-2 border-zinc-500/40 overflow-hidden">
+      <div className={cn(
+        "absolute inset-12 rounded-[100px] border-2 border-zinc-500/40 overflow-hidden",
+        isDark ? "bg-zinc-900" : "bg-zinc-200"
+      )}>
         <div 
           className="absolute inset-4 rounded-[80px] border border-zinc-500/25 overflow-hidden"
           style={{
-            backgroundImage: `url(${tableFeltImage})`,
+            backgroundImage: `url(${isDark ? tableFeltDark : tableFeltLight})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
         >
-          <div className="absolute inset-0 bg-black/30" />
+          <div className={cn(
+            "absolute inset-0",
+            isDark ? "bg-black/30" : "bg-white/20"
+          )} />
         </div>
       </div>
 
