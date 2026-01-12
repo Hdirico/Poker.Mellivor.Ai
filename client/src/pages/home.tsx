@@ -52,7 +52,7 @@ const mockPlayers = [
     ],
     isActive: false,
     isDealer: false,
-    isFolded: true,
+    isFolded: false,
     bet: 0,
     position: "right" as const,
     showCards: false,
