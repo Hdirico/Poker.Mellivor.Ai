@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { PlayerSeat } from "./PlayerSeat";
 import { CommunityCards } from "./CommunityCards";
 import tableFeltDark from "@assets/Screenshot_2026-01-12_at_3.38.57_PM_1768250366126.png";
-import tableFeltLight from "@assets/Screenshot_2026-01-12_at_3.47.57_PM_1768250909531.png";
+import tableFeltLight from "@assets/Screenshot_2026-01-12_at_3.53.45_PM_1768251255641.png";
 
 type Suit = "spade" | "heart" | "diamond" | "club";
 type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
