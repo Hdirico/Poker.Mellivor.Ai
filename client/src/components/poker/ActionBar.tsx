@@ -2,6 +2,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import { X } from "lucide-react";
 
 interface ActionBarProps {
   minBet: number;
@@ -31,12 +33,32 @@ export function ActionBar({
   className,
 }: ActionBarProps) {
   const [raiseAmount, setRaiseAmount] = useState(minBet);
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customAmount, setCustomAmount] = useState("");
 
   const quickBetAmounts = [
     { label: "½ Pot", value: Math.floor(currentBet * 0.5) },
     { label: "Pot", value: currentBet },
     { label: "2× Pot", value: currentBet * 2 },
   ].filter(b => b.value <= maxBet && b.value >= minBet);
+
+  const handleCustomSubmit = () => {
+    const amount = parseInt(customAmount, 10);
+    if (!isNaN(amount) && amount >= minBet && amount <= maxBet) {
+      setRaiseAmount(amount);
+      setShowCustomInput(false);
+      setCustomAmount("");
+    }
+  };
+
+  const handleCustomKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleCustomSubmit();
+    } else if (e.key === "Escape") {
+      setShowCustomInput(false);
+      setCustomAmount("");
+    }
+  };
 
   return (
     <div 
@@ -115,6 +137,52 @@ export function ActionBar({
                   {bet.label}
                 </Button>
               ))}
+              
+              {showCustomInput ? (
+                <div className="flex items-center gap-1">
+                  <Input
+                    type="number"
+                    value={customAmount}
+                    onChange={(e) => setCustomAmount(e.target.value)}
+                    onKeyDown={handleCustomKeyDown}
+                    placeholder={minBet.toString()}
+                    className="w-24 h-8 text-sm font-mono"
+                    autoFocus
+                    data-testid="input-custom-bet"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCustomSubmit}
+                    className="text-xs px-2"
+                    data-testid="button-custom-confirm"
+                  >
+                    Set
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      setShowCustomInput(false);
+                      setCustomAmount("");
+                    }}
+                    className="h-8 w-8 text-muted-foreground"
+                    data-testid="button-custom-cancel"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowCustomInput(true)}
+                  className="text-xs text-muted-foreground hover:text-foreground"
+                  data-testid="button-custom"
+                >
+                  Custom
+                </Button>
+              )}
             </div>
 
             <Button
