@@ -108,7 +108,7 @@ export function ActionBar({
           </div>
 
           <div className="flex-1 flex items-center gap-6">
-            <div className="flex-1 px-2">
+            <div className="flex-[2] px-2 min-w-[200px]">
               <Slider
                 value={[raiseAmount]}
                 onValueChange={([val]) => setRaiseAmount(val)}
