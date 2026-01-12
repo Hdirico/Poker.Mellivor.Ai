@@ -138,7 +138,7 @@ export function ActionBar({
                 size="sm"
                 onClick={undoLastBet}
                 disabled={betHistory.length === 0}
-                className="px-3 text-sm text-muted-foreground"
+                className="px-4 text-sm font-medium border-2 border-zinc-400 text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40"
                 data-testid="button-undo"
               >
                 Undo
