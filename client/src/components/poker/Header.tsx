@@ -37,9 +37,9 @@ export function Header({ tableName, blinds, isDark, onThemeChange, className }: 
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary border border-zinc-400/30 flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">O</span>
+            <span className="text-primary-foreground font-bold text-sm">M</span>
           </div>
-          <span className="font-semibold tracking-tight">Offsuit</span>
+          <span className="font-semibold tracking-tight">Mellipoker.Ai</span>
         </div>
 
         <div className="h-4 w-px bg-border" />
