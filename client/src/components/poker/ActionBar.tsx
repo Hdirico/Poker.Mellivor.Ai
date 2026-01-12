@@ -68,7 +68,7 @@ export function ActionBar({
       )}
       data-testid="action-bar"
     >
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <Button
