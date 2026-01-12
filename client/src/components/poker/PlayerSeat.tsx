@@ -23,6 +23,8 @@ interface PlayerSeatProps {
   position: "top" | "top-left" | "top-right" | "left" | "right" | "bottom-left" | "bottom-right" | "bottom";
   showCards?: boolean;
   isDark?: boolean;
+  dealOrder?: number;
+  dealerPosition?: "top" | "top-left" | "top-right" | "left" | "right" | "bottom-left" | "bottom-right" | "bottom";
   className?: string;
 }
 
@@ -37,16 +39,25 @@ const positionClasses: Record<string, string> = {
   "bottom": "bottom-0 left-1/2 -translate-x-1/2",
 };
 
-const dealOrigin: Record<string, { x: number; y: number }> = {
-  "top": { x: 0, y: 200 },
-  "top-left": { x: 150, y: 150 },
-  "top-right": { x: -150, y: 150 },
-  "left": { x: 250, y: 0 },
-  "right": { x: -250, y: 0 },
-  "bottom-left": { x: 150, y: -150 },
-  "bottom-right": { x: -150, y: -150 },
-  "bottom": { x: 0, y: -200 },
+const positionCoords: Record<string, { x: number; y: number }> = {
+  "top": { x: 0, y: -100 },
+  "top-left": { x: -200, y: -80 },
+  "top-right": { x: 200, y: -80 },
+  "left": { x: -280, y: 0 },
+  "right": { x: 280, y: 0 },
+  "bottom-left": { x: -200, y: 80 },
+  "bottom-right": { x: 200, y: 80 },
+  "bottom": { x: 0, y: 120 },
 };
+
+function getDealOrigin(playerPosition: string, dealerPosition: string): { x: number; y: number } {
+  const dealer = positionCoords[dealerPosition] || positionCoords["top-right"];
+  const player = positionCoords[playerPosition] || { x: 0, y: 0 };
+  return {
+    x: dealer.x - player.x,
+    y: dealer.y - player.y,
+  };
+}
 
 export function PlayerSeat({
   name,
@@ -61,8 +72,13 @@ export function PlayerSeat({
   position,
   showCards = false,
   isDark = true,
+  dealOrder = 0,
+  dealerPosition = "top-right",
   className,
 }: PlayerSeatProps) {
+  const dealOrigin = getDealOrigin(position, dealerPosition);
+  const numPlayers = 5;
+  const cardDelayBase = 0.15;
   return (
     <div 
       className={cn(
@@ -74,37 +90,41 @@ export function PlayerSeat({
       data-testid={`player-seat-${position}`}
     >
       <div className="flex gap-1">
-        {cards?.map((card, i) => (
-          <motion.div
-            key={i}
-            initial={{ 
-              y: dealOrigin[position].y,
-              x: dealOrigin[position].x,
-              rotate: -360,
-              opacity: 0 
-            }}
-            animate={{ 
-              y: 0, 
-              x: 0,
-              rotate: 0,
-              opacity: 1 
-            }}
-            transition={{ 
-              type: "spring",
-              stiffness: 100,
-              damping: 15,
-              delay: i * 0.15 + 0.2
-            }}
-          >
-            <PlayingCard
-              suit={showCards ? card.suit : undefined}
-              rank={showCards ? card.rank : undefined}
-              faceDown={!showCards}
-              size="sm"
-              isDark={isDark}
-            />
-          </motion.div>
-        )) ?? (
+        {cards?.map((card, i) => {
+          const cardIndex = dealOrder + (i * numPlayers);
+          const delay = cardIndex * cardDelayBase + 0.1;
+          return (
+            <motion.div
+              key={i}
+              initial={{ 
+                y: dealOrigin.y,
+                x: dealOrigin.x,
+                rotate: -360,
+                opacity: 0 
+              }}
+              animate={{ 
+                y: 0, 
+                x: 0,
+                rotate: 0,
+                opacity: 1 
+              }}
+              transition={{ 
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay
+              }}
+            >
+              <PlayingCard
+                suit={showCards ? card.suit : undefined}
+                rank={showCards ? card.rank : undefined}
+                faceDown={!showCards}
+                size="sm"
+                isDark={isDark}
+              />
+            </motion.div>
+          );
+        }) ?? (
           <>
             <div className="w-10 h-14 rounded-lg border border-dashed border-zinc-500/40" />
             <div className="w-10 h-14 rounded-lg border border-dashed border-zinc-500/40" />

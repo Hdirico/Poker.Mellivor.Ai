@@ -35,6 +35,17 @@ interface PokerTableProps {
   className?: string;
 }
 
+const dealOrderByPosition: Record<string, number> = {
+  "right": 0,
+  "bottom": 1,
+  "left": 2,
+  "top-left": 3,
+  "top-right": 4,
+  "top": 5,
+  "bottom-left": 6,
+  "bottom-right": 7,
+};
+
 export function PokerTable({ 
   players, 
   communityCards, 
@@ -74,7 +85,10 @@ export function PokerTable({
       </div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 pt-4">
-        <CommunityCards cards={communityCards} />
+        <CommunityCards 
+          cards={communityCards} 
+          baseDelay={players.length * 2 * 0.15 + 0.3}
+        />
         
         <div className="px-4 py-2 rounded-lg bg-card/80 backdrop-blur-sm border-2 border-zinc-500/40">
           <span className="text-xs text-muted-foreground">Pot</span>
@@ -89,6 +103,8 @@ export function PokerTable({
           key={player.id}
           {...player}
           isDark={isDark}
+          dealOrder={dealOrderByPosition[player.position] ?? 0}
+          dealerPosition="top-right"
         />
       ))}
     </div>

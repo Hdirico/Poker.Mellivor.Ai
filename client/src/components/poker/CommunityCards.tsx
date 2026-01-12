@@ -12,10 +12,11 @@ interface Card {
 
 interface CommunityCardsProps {
   cards: Card[];
+  baseDelay?: number;
   className?: string;
 }
 
-export function CommunityCards({ cards, className }: CommunityCardsProps) {
+export function CommunityCards({ cards, baseDelay = 0, className }: CommunityCardsProps) {
   const emptySlots = 5 - cards.length;
 
   return (
@@ -27,7 +28,7 @@ export function CommunityCards({ cards, className }: CommunityCardsProps) {
         <motion.div
           key={i}
           initial={{ 
-            y: -200, 
+            y: -120, 
             rotate: -360,
             opacity: 0 
           }}
@@ -40,7 +41,7 @@ export function CommunityCards({ cards, className }: CommunityCardsProps) {
             type: "spring",
             stiffness: 120,
             damping: 14,
-            delay: i * 0.12
+            delay: baseDelay + (i * 0.15)
           }}
         >
           <PlayingCard
