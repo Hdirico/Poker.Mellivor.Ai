@@ -92,30 +92,29 @@ export function ActionBar({
               Fold
             </Button>
 
-            {canCheck ? (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={onCheck}
-                className="px-8"
-                data-testid="button-check"
-              >
-                Check
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={onCall}
-                className="px-8"
-                data-testid="button-call"
-              >
-                Call
-                <span className="ml-2 font-mono text-muted-foreground">
-                  {callAmount.toLocaleString()}
-                </span>
-              </Button>
-            )}
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={onCheck}
+              disabled={!canCheck}
+              className="px-8 disabled:opacity-40"
+              data-testid="button-check"
+            >
+              Check
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={onCall}
+              className="px-8"
+              data-testid="button-call"
+            >
+              Call
+              <span className="ml-2 font-mono text-muted-foreground">
+                {callAmount.toLocaleString()}
+              </span>
+            </Button>
           </div>
 
           <div className="flex items-center gap-4">
