@@ -32,15 +32,32 @@ export function ActionBar({
   className,
 }: ActionBarProps) {
   const [raiseAmount, setRaiseAmount] = useState(minBet);
+  const [betHistory, setBetHistory] = useState<number[]>([]);
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [customAmount, setCustomAmount] = useState("");
+
+  const addBet = (amount: number) => {
+    const newAmount = Math.min(raiseAmount + amount, maxBet);
+    if (newAmount !== raiseAmount) {
+      setBetHistory(prev => [...prev, amount]);
+      setRaiseAmount(newAmount);
+    }
+  };
+
+  const undoLastBet = () => {
+    if (betHistory.length > 0) {
+      const lastBet = betHistory[betHistory.length - 1];
+      setBetHistory(prev => prev.slice(0, -1));
+      setRaiseAmount(prev => Math.max(prev - lastBet, minBet));
+    }
+  };
 
   const betAmounts = [25, 50, 100, 500].filter(v => v <= maxBet);
 
   const handleCustomSubmit = () => {
     const amount = parseInt(customAmount, 10);
-    if (!isNaN(amount) && amount >= minBet && amount <= maxBet) {
-      setRaiseAmount(amount);
+    if (!isNaN(amount) && amount > 0 && amount <= maxBet) {
+      addBet(amount);
       setShowCustomInput(false);
       setCustomAmount("");
     }
@@ -109,13 +126,24 @@ export function ActionBar({
                   key={amount}
                   variant="outline"
                   size="sm"
-                  onClick={() => setRaiseAmount(prev => Math.min(prev + amount, maxBet))}
+                  onClick={() => addBet(amount)}
                   className="px-4 font-mono text-sm"
                   data-testid={`button-bet-${amount}`}
                 >
                   +{amount}
                 </Button>
               ))}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={undoLastBet}
+                disabled={betHistory.length === 0}
+                className="px-3 text-sm text-muted-foreground"
+                data-testid="button-undo"
+              >
+                Undo
+              </Button>
               
               {showCustomInput ? (
                 <div className="flex items-center gap-1">
