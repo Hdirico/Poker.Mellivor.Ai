@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Settings, HelpCircle, Volume2, VolumeX } from "lucide-react";
+import { Settings, HelpCircle, Volume2, VolumeX, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   tableName: string;
@@ -11,6 +11,17 @@ interface HeaderProps {
 
 export function Header({ tableName, blinds, className }: HeaderProps) {
   const [isMuted, setIsMuted] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  useEffect(() => {
+    if (isDark) {
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+    } else {
+      document.body.classList.remove('dark');
+      document.body.classList.add('light');
+    }
+  }, [isDark]);
 
   return (
     <header 
