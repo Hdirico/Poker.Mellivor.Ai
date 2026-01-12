@@ -84,10 +84,9 @@ export function ActionBar({
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <Button
-              variant="outline"
               size="lg"
               onClick={onFold}
-              className="px-8 text-red-500 border-red-500/50 hover:bg-red-500/10 hover:text-red-400 hover:border-red-400"
+              className="px-8 bg-red-600 text-white hover:bg-red-500 border-red-600"
               data-testid="button-fold"
             >
               Fold
