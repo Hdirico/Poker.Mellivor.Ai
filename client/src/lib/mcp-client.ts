@@ -11,11 +11,17 @@
  * - Prompt handling
  */
 
+export const MCP_CONFIG = {
+  "portal-poker": {
+    "url": "https://portal-poker.azurewebsites.net/mcp"
+  }
+} as const;
+
 export class MCPClient {
   private baseUrl: string;
   private isConnected: boolean = false;
 
-  constructor(baseUrl: string = '/api/mcp') {
+  constructor(baseUrl: string = MCP_CONFIG["portal-poker"].url) {
     this.baseUrl = baseUrl;
   }
 
