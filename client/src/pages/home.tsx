@@ -30,11 +30,6 @@ export default function Home() {
     humanPlayer,
   } = usePokerGame();
 
-  useEffect(() => {
-    if (!tableId) {
-      createTable().catch(console.error);
-    }
-  }, [tableId, createTable]);
 
   const handleDeal = async () => {
     setDealKey(prev => prev + 1);

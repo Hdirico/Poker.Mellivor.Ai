@@ -164,6 +164,43 @@ export function usePokerGame() {
     return mcpState;
   }, []);
 
+  const processAITurns = useCallback(async (currentState: any) => {
+    let state = currentState;
+    
+    while (
+      state.status === "active" && 
+      state.actor_seat !== undefined && 
+      state.actor_seat !== gameState.humanSeat
+    ) {
+      const actorSeat = state.seats?.find((s: any) => s.seat === state.actor_seat);
+      if (!actorSeat || actorSeat.player_type !== "ai") break;
+      
+      try {
+        const result = await callMCPTool("trigger_ai", {
+          table_id: state.table_id,
+          seat: state.actor_seat,
+        });
+        
+        if (result.isError) {
+          console.error("AI trigger failed:", result);
+          setGameState(prev => ({ ...prev, isLoading: false, error: "AI server error - please try again later" }));
+          break;
+        }
+        
+        state = result;
+        updateGameFromMCP(result, gameState.humanSeat);
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (error) {
+        console.error("AI turn error:", error);
+        setGameState(prev => ({ ...prev, isLoading: false, error: "AI server error" }));
+        break;
+      }
+    }
+    
+    return state;
+  }, [gameState.humanSeat, updateGameFromMCP]);
+
   const createTable = useCallback(async (playerConfigs?: { name: string; type: "human" | "ai"; stack: number }[]) => {
     setGameState(prev => ({ ...prev, isLoading: true, error: null }));
     
@@ -244,52 +281,6 @@ export function usePokerGame() {
       throw error;
     }
   }, [gameState.tableId, gameState.humanSeat, updateGameFromMCP, processAITurns]);
-
-  const processAITurns = useCallback(async (currentState: any) => {
-    let state = currentState;
-    
-    while (
-      state.status === "active" && 
-      state.actor_seat !== undefined && 
-      state.actor_seat !== gameState.humanSeat
-    ) {
-      const actorSeat = state.seats?.find((s: any) => s.seat === state.actor_seat);
-      if (!actorSeat || actorSeat.player_type !== "ai") break;
-      
-      try {
-        const result = await callMCPTool("trigger_ai", {
-          table_id: state.table_id,
-          seat: state.actor_seat,
-        });
-        
-        if (result.isError) {
-          console.log("AI trigger failed, simulating AI action...");
-          const currentBet = Math.max(...state.seats.map((s: any) => s.bet || 0));
-          const aiBet = actorSeat.bet || 0;
-          const aiAction = aiBet >= currentBet ? "check" : "call";
-          
-          const fallbackResult = await callMCPTool("act", {
-            table_id: state.table_id,
-            seat: state.actor_seat,
-            action: aiAction,
-          });
-          
-          state = fallbackResult;
-          updateGameFromMCP(fallbackResult, gameState.humanSeat);
-        } else {
-          state = result;
-          updateGameFromMCP(result, gameState.humanSeat);
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 300));
-      } catch (error) {
-        console.error("AI turn error:", error);
-        break;
-      }
-    }
-    
-    return state;
-  }, [gameState.humanSeat, updateGameFromMCP]);
 
   const act = useCallback(async (action: "fold" | "check" | "call" | "raise", amount?: number) => {
     if (!gameState.tableId) return;
