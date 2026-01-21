@@ -84,7 +84,13 @@ async function callMCPTool(name: string, args: Record<string, any> = {}) {
     throw new Error(data.error.message || 'MCP call failed');
   }
   
-  return data.result?.structuredContent || data.result;
+  const result = data.result?.structuredContent || data.result;
+  
+  if (data.result?.isError) {
+    return { ...result, isError: true };
+  }
+  
+  return result;
 }
 
 export function usePokerGame() {
@@ -192,16 +198,34 @@ export function usePokerGame() {
   }, [updateGameFromMCP]);
 
   const dealHand = useCallback(async () => {
-    if (!gameState.tableId) {
-      const tableResult = await createTable();
-      if (!tableResult?.table_id) return;
-    }
-    
     setGameState(prev => ({ ...prev, isLoading: true, error: null }));
     
     try {
+      let tableId = gameState.tableId;
+      
+      if (!tableId) {
+        const tableResult = await callMCPTool("create_table", {
+          players: [
+            { name: "You", type: "human", stack: 1000 },
+            { name: "Sarah K.", type: "ai", stack: 1000 },
+            { name: "Mike R.", type: "ai", stack: 1000 },
+            { name: "Alex T.", type: "ai", stack: 1000 },
+            { name: "Jordan L.", type: "ai", stack: 1000 },
+          ],
+          small_blind: 5,
+          big_blind: 10,
+        });
+        
+        if (!tableResult?.table_id) {
+          throw new Error("Failed to create table");
+        }
+        
+        tableId = tableResult.table_id;
+        setGameState(prev => ({ ...prev, tableId }));
+      }
+      
       const result = await callMCPTool("deal_hand", {
-        table_id: gameState.tableId,
+        table_id: tableId,
       });
       
       updateGameFromMCP(result, gameState.humanSeat);
@@ -219,7 +243,7 @@ export function usePokerGame() {
       }));
       throw error;
     }
-  }, [gameState.tableId, gameState.humanSeat, createTable, updateGameFromMCP]);
+  }, [gameState.tableId, gameState.humanSeat, updateGameFromMCP, processAITurns]);
 
   const processAITurns = useCallback(async (currentState: any) => {
     let state = currentState;
@@ -238,10 +262,26 @@ export function usePokerGame() {
           seat: state.actor_seat,
         });
         
-        state = result;
-        updateGameFromMCP(result, gameState.humanSeat);
+        if (result.isError) {
+          console.log("AI trigger failed, simulating AI action...");
+          const currentBet = Math.max(...state.seats.map((s: any) => s.bet || 0));
+          const aiBet = actorSeat.bet || 0;
+          const aiAction = aiBet >= currentBet ? "check" : "call";
+          
+          const fallbackResult = await callMCPTool("act", {
+            table_id: state.table_id,
+            seat: state.actor_seat,
+            action: aiAction,
+          });
+          
+          state = fallbackResult;
+          updateGameFromMCP(fallbackResult, gameState.humanSeat);
+        } else {
+          state = result;
+          updateGameFromMCP(result, gameState.humanSeat);
+        }
         
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 300));
       } catch (error) {
         console.error("AI turn error:", error);
         break;
