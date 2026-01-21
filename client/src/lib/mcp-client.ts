@@ -1,61 +1,120 @@
-/**
- * MCP Client Placeholder
- * 
- * This file will handle communication with the MCP (Model Context Protocol) server
- * once integrated.
- * 
- * Future implementation will include:
- * - Connection management
- * - Tool execution
- * - Resource access
- * - Prompt handling
- */
-
 export const MCP_CONFIG = {
   "portal-poker": {
     "url": "https://portal-poker.azurewebsites.net/mcp"
   }
 } as const;
 
+export interface MCPToolCall {
+  name: string;
+  arguments?: Record<string, any>;
+}
+
+export interface MCPResponse {
+  content: Array<{
+    type: string;
+    text?: string;
+    [key: string]: any;
+  }>;
+  isError?: boolean;
+}
+
 export class MCPClient {
   private baseUrl: string;
-  private isConnected: boolean = false;
 
   constructor(baseUrl: string = MCP_CONFIG["portal-poker"].url) {
     this.baseUrl = baseUrl;
   }
 
-  /**
-   * Initialize connection to MCP server
-   */
-  async connect(): Promise<void> {
-    console.log('Connecting to MCP server...');
-    this.isConnected = true;
+  async initialize(): Promise<{ protocolVersion: string; capabilities: any; serverInfo: any }> {
+    const response = await fetch(`${this.baseUrl}/initialize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        protocolVersion: '2024-11-05',
+        capabilities: {},
+        clientInfo: {
+          name: 'mellipoker-ai',
+          version: '1.0.0'
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to initialize MCP: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
-  /**
-   * List available tools from the MCP server
-   */
-  async listTools(): Promise<any[]> {
-    if (!this.isConnected) throw new Error('MCP Client not connected');
-    return [];
+  async listTools(): Promise<{ tools: Array<{ name: string; description?: string; inputSchema: any }> }> {
+    const response = await fetch(`${this.baseUrl}/tools/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({})
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to list tools: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
-  /**
-   * Execute a specific tool
-   */
-  async callTool(toolName: string, args: Record<string, any>): Promise<any> {
-    if (!this.isConnected) throw new Error('MCP Client not connected');
-    console.log(`Calling tool: ${toolName}`, args);
-    return null;
+  async callTool(toolName: string, args: Record<string, any> = {}): Promise<MCPResponse> {
+    const response = await fetch(`${this.baseUrl}/tools/call`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: toolName,
+        arguments: args
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to call tool ${toolName}: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 
-  /**
-   * List available resources
-   */
-  async listResources(): Promise<any[]> {
-    if (!this.isConnected) throw new Error('MCP Client not connected');
-    return [];
+  async listResources(): Promise<{ resources: Array<{ uri: string; name: string; description?: string }> }> {
+    const response = await fetch(`${this.baseUrl}/resources/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({})
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to list resources: ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  async readResource(uri: string): Promise<{ contents: Array<{ uri: string; mimeType?: string; text?: string }> }> {
+    const response = await fetch(`${this.baseUrl}/resources/read`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uri
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to read resource ${uri}: ${response.statusText}`);
+    }
+
+    return response.json();
   }
 }
 
