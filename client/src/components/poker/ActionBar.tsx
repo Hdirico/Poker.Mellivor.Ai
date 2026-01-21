@@ -16,6 +16,7 @@ interface ActionBarProps {
   canCheck: boolean;
   callAmount: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function ActionBar({
@@ -30,6 +31,7 @@ export function ActionBar({
   canCheck,
   callAmount,
   className,
+  disabled = false,
 }: ActionBarProps) {
   const [raiseAmount, setRaiseAmount] = useState(minBet);
   const [betHistory, setBetHistory] = useState<number[]>([]);
@@ -86,7 +88,8 @@ export function ActionBar({
             <Button
               size="lg"
               onClick={onFold}
-              className="px-8 bg-red-600 text-white hover:bg-red-500 border-red-600"
+              disabled={disabled}
+              className="px-8 bg-red-600 text-white hover:bg-red-500 border-red-600 disabled:opacity-40"
               data-testid="button-fold"
             >
               Fold
@@ -96,7 +99,7 @@ export function ActionBar({
               variant="outline"
               size="lg"
               onClick={onCheck}
-              disabled={!canCheck}
+              disabled={disabled || !canCheck}
               className="px-8 disabled:opacity-40"
               data-testid="button-check"
             >
@@ -107,7 +110,8 @@ export function ActionBar({
               variant="outline"
               size="lg"
               onClick={onCall}
-              className="px-8"
+              disabled={disabled}
+              className="px-8 disabled:opacity-40"
               data-testid="button-call"
             >
               Call
@@ -125,7 +129,8 @@ export function ActionBar({
                   variant="outline"
                   size="sm"
                   onClick={() => addBet(amount)}
-                  className="px-4 font-mono text-sm"
+                  disabled={disabled}
+                  className="px-4 font-mono text-sm disabled:opacity-40"
                   data-testid={`button-bet-${amount}`}
                 >
                   +{amount}
@@ -136,7 +141,7 @@ export function ActionBar({
                 variant="outline"
                 size="sm"
                 onClick={undoLastBet}
-                disabled={betHistory.length === 0}
+                disabled={disabled || betHistory.length === 0}
                 className="px-4 text-sm font-medium border-2 border-zinc-400 text-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40"
                 data-testid="button-undo"
               >
@@ -182,7 +187,8 @@ export function ActionBar({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowCustomInput(true)}
-                  className="px-4 text-sm"
+                  disabled={disabled}
+                  className="px-4 text-sm disabled:opacity-40"
                   data-testid="button-custom"
                 >
                   Custom
@@ -194,7 +200,8 @@ export function ActionBar({
               variant="default"
               size="lg"
               onClick={() => onRaise(raiseAmount)}
-              className="px-8 min-w-[140px]"
+              disabled={disabled}
+              className="px-8 min-w-[140px] disabled:opacity-40"
               data-testid="button-raise"
             >
               Raise

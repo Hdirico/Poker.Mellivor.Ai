@@ -1,170 +1,146 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/poker/Header";
 import { PokerTable } from "@/components/poker/PokerTable";
 import { ActionBar } from "@/components/poker/ActionBar";
-
-type Suit = "spade" | "heart" | "diamond" | "club";
-type Rank = "A" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K";
-
-interface Card {
-  suit: Suit;
-  rank: Rank;
-}
-
-const mockPlayers = [
-  {
-    id: "1",
-    name: "Sarah K.",
-    chips: 2450,
-    cards: [
-      { suit: "spade" as Suit, rank: "A" as Rank },
-      { suit: "heart" as Suit, rank: "K" as Rank },
-    ],
-    isActive: false,
-    isFolded: false,
-    bet: 100,
-    position: "top-left" as const,
-    showCards: false,
-  },
-  {
-    id: "2",
-    name: "Mike R.",
-    chips: 1850,
-    cards: [
-      { suit: "club" as Suit, rank: "J" as Rank },
-      { suit: "diamond" as Suit, rank: "Q" as Rank },
-    ],
-    isActive: false,
-    isFolded: false,
-    bet: 200,
-    position: "top-right" as const,
-    showCards: false,
-  },
-  {
-    id: "3",
-    name: "Alex T.",
-    chips: 3200,
-    cards: [
-      { suit: "heart" as Suit, rank: "9" as Rank },
-      { suit: "heart" as Suit, rank: "10" as Rank },
-    ],
-    isActive: false,
-    isFolded: false,
-    bet: 0,
-    position: "right" as const,
-    showCards: false,
-  },
-  {
-    id: "4",
-    name: "You",
-    chips: 2800,
-    cards: [
-      { suit: "spade" as Suit, rank: "A" as Rank },
-      { suit: "spade" as Suit, rank: "K" as Rank },
-    ],
-    isActive: true,
-    isFolded: false,
-    bet: 100,
-    position: "bottom" as const,
-    showCards: true,
-  },
-  {
-    id: "5",
-    name: "Jordan L.",
-    chips: 1200,
-    cards: [
-      { suit: "diamond" as Suit, rank: "7" as Rank },
-      { suit: "club" as Suit, rank: "8" as Rank },
-    ],
-    isActive: false,
-    isFolded: false,
-    bet: 100,
-    position: "left" as const,
-    showCards: false,
-  },
-];
-
-const mockCommunityCards: Card[] = [
-  { suit: "heart", rank: "A" },
-  { suit: "club", rank: "7" },
-  { suit: "spade", rank: "2" },
-];
-
-const positionOrder = ["top-left", "top-right", "right", "bottom", "left"] as const;
+import { usePokerGame } from "@/hooks/use-poker-game";
 
 export default function Home() {
-  const [pot] = useState(700);
-  const [playerChips] = useState(2800);
   const [isDark, setIsDark] = useState(true);
   const [dealKey, setDealKey] = useState(0);
-  const [dealerIndex, setDealerIndex] = useState(1);
 
-  const handleDeal = () => {
+  const {
+    tableId,
+    status,
+    pot,
+    players,
+    communityCards,
+    smallBlind,
+    bigBlind,
+    isLoading,
+    error,
+    createTable,
+    dealHand,
+    fold,
+    check,
+    call,
+    raise,
+    canCheck,
+    callAmount,
+    isMyTurn,
+    humanPlayer,
+  } = usePokerGame();
+
+  useEffect(() => {
+    if (!tableId) {
+      createTable().catch(console.error);
+    }
+  }, [tableId, createTable]);
+
+  const handleDeal = async () => {
     setDealKey(prev => prev + 1);
-    setDealerIndex(prev => (prev + 1) % positionOrder.length);
+    try {
+      await dealHand();
+    } catch (err) {
+      console.error("Deal error:", err);
+    }
   };
 
-  const getPlayerRoles = (position: string) => {
-    const posIndex = positionOrder.indexOf(position as typeof positionOrder[number]);
-    const sbIndex = (dealerIndex + 1) % positionOrder.length;
-    const bbIndex = (dealerIndex + 2) % positionOrder.length;
-    return {
-      isDealer: posIndex === dealerIndex,
-      isSmallBlind: posIndex === sbIndex,
-      isBigBlind: posIndex === bbIndex,
-    };
+  const handleFold = async () => {
+    if (!isMyTurn) return;
+    try {
+      await fold();
+    } catch (err) {
+      console.error("Fold error:", err);
+    }
   };
 
-  const handleFold = () => {
-    console.log("Fold");
+  const handleCheck = async () => {
+    if (!isMyTurn) return;
+    try {
+      await check();
+    } catch (err) {
+      console.error("Check error:", err);
+    }
   };
 
-  const handleCheck = () => {
-    console.log("Check");
+  const handleCall = async () => {
+    if (!isMyTurn) return;
+    try {
+      await call();
+    } catch (err) {
+      console.error("Call error:", err);
+    }
   };
 
-  const handleCall = () => {
-    console.log("Call");
+  const handleRaise = async (amount: number) => {
+    if (!isMyTurn) return;
+    try {
+      await raise(amount);
+    } catch (err) {
+      console.error("Raise error:", err);
+    }
   };
 
-  const handleRaise = (amount: number) => {
-    console.log("Raise", amount);
-  };
+  const blindsDisplay = `${smallBlind}/${bigBlind}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-background" data-testid="page-home">
       <Header 
         tableName="Main Table #1" 
-        blinds="50/100" 
+        blinds={blindsDisplay}
         isDark={isDark}
         onThemeChange={setIsDark}
         onDeal={handleDeal}
       />
 
-      <main className="flex-1 flex items-center justify-center p-8">
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-2 text-center text-sm">
+          {error}
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-background border rounded-lg px-6 py-3 shadow-lg">
+            <span className="text-muted-foreground">Processing...</span>
+          </div>
+        </div>
+      )}
+
+      <main className="flex-1 flex items-center justify-center p-8 relative">
         <PokerTable
           key={dealKey}
-          players={mockPlayers.map(p => ({
-            ...p,
-            ...getPlayerRoles(p.position),
-          }))}
-          communityCards={mockCommunityCards}
+          players={players}
+          communityCards={communityCards}
           pot={pot}
           isDark={isDark}
         />
+        
+        {status === "idle" && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <button
+              onClick={handleDeal}
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+              data-testid="button-start-game"
+            >
+              Start Game
+            </button>
+          </div>
+        )}
       </main>
 
       <ActionBar
-        minBet={200}
-        maxBet={playerChips}
-        currentBet={pot}
-        playerChips={playerChips}
+        minBet={bigBlind * 2}
+        maxBet={humanPlayer?.chips || 1000}
+        currentBet={Math.max(...players.map(p => p.bet), 0)}
+        playerChips={humanPlayer?.chips || 1000}
         onFold={handleFold}
         onCheck={handleCheck}
         onCall={handleCall}
         onRaise={handleRaise}
-        canCheck={true}
-        callAmount={100}
+        canCheck={canCheck || false}
+        callAmount={callAmount}
+        disabled={!isMyTurn || isLoading}
       />
     </div>
   );
