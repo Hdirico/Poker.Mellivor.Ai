@@ -21,7 +21,7 @@ export interface MCPResponse {
 export class MCPClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string = MCP_CONFIG["portal-poker"].url) {
+  constructor(baseUrl: string = '/api/mcp') {
     this.baseUrl = baseUrl;
   }
 
@@ -30,15 +30,7 @@ export class MCPClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        protocolVersion: '2024-11-05',
-        capabilities: {},
-        clientInfo: {
-          name: 'mellipoker-ai',
-          version: '1.0.0'
-        }
-      })
+      }
     });
 
     if (!response.ok) {
@@ -53,8 +45,7 @@ export class MCPClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({})
+      }
     });
 
     if (!response.ok) {
@@ -88,8 +79,7 @@ export class MCPClient {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({})
+      }
     });
 
     if (!response.ok) {
