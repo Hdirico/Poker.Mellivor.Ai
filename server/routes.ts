@@ -4,23 +4,74 @@ import { storage } from "./storage";
 
 const MCP_SERVER_URL = "https://portal-poker.azurewebsites.net/mcp";
 
-async function callMCPTool(toolName: string, args: Record<string, any> = {}) {
-  const response = await fetch(`${MCP_SERVER_URL}/tools/call`, {
+let mcpSessionId: string | null = null;
+let requestId = 0;
+
+function getNextRequestId() {
+  return ++requestId;
+}
+
+async function parseMCPResponse(response: Response) {
+  const text = await response.text();
+  const lines = text.split('\n');
+  
+  for (const line of lines) {
+    if (line.startsWith('data: ')) {
+      const jsonStr = line.substring(6);
+      try {
+        return JSON.parse(jsonStr);
+      } catch (e) {
+        continue;
+      }
+    }
+  }
+  
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error(`Failed to parse MCP response: ${text}`);
+  }
+}
+
+async function mcpRequest(method: string, params: Record<string, any> = {}, sessionId?: string) {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json, text/event-stream',
+  };
+  
+  if (sessionId) {
+    headers['Mcp-Session-Id'] = sessionId;
+  }
+
+  const response = await fetch(MCP_SERVER_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
-      name: toolName,
-      arguments: args
+      jsonrpc: '2.0',
+      method,
+      params,
+      id: getNextRequestId()
     })
   });
 
-  if (!response.ok) {
-    throw new Error(`MCP tool call failed: ${response.statusText}`);
+  const newSessionId = response.headers.get('Mcp-Session-Id');
+  if (newSessionId) {
+    mcpSessionId = newSessionId;
   }
 
-  return response.json();
+  return parseMCPResponse(response);
+}
+
+async function callMCPTool(toolName: string, args: Record<string, any> = {}) {
+  if (!mcpSessionId) {
+    await mcpRequest('initialize', {
+      protocolVersion: '2024-11-05',
+      capabilities: {},
+      clientInfo: { name: 'mellipoker-ai', version: '1.0.0' }
+    });
+  }
+  
+  return mcpRequest('tools/call', { name: toolName, arguments: args }, mcpSessionId || undefined);
 }
 
 export async function registerRoutes(
@@ -30,22 +81,11 @@ export async function registerRoutes(
   
   app.post('/api/mcp/initialize', async (req, res) => {
     try {
-      const response = await fetch(`${MCP_SERVER_URL}/initialize`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          protocolVersion: '2024-11-05',
-          capabilities: {},
-          clientInfo: {
-            name: 'mellipoker-ai',
-            version: '1.0.0'
-          }
-        })
+      const data = await mcpRequest('initialize', {
+        protocolVersion: '2024-11-05',
+        capabilities: {},
+        clientInfo: { name: 'mellipoker-ai', version: '1.0.0' }
       });
-
-      const data = await response.json();
       res.json(data);
     } catch (error) {
       console.error('MCP initialize error:', error);
@@ -55,15 +95,14 @@ export async function registerRoutes(
 
   app.post('/api/mcp/tools/list', async (req, res) => {
     try {
-      const response = await fetch(`${MCP_SERVER_URL}/tools/list`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-      });
-
-      const data = await response.json();
+      if (!mcpSessionId) {
+        await mcpRequest('initialize', {
+          protocolVersion: '2024-11-05',
+          capabilities: {},
+          clientInfo: { name: 'mellipoker-ai', version: '1.0.0' }
+        });
+      }
+      const data = await mcpRequest('tools/list', {}, mcpSessionId || undefined);
       res.json(data);
     } catch (error) {
       console.error('MCP tools list error:', error);
@@ -84,15 +123,14 @@ export async function registerRoutes(
 
   app.post('/api/mcp/resources/list', async (req, res) => {
     try {
-      const response = await fetch(`${MCP_SERVER_URL}/resources/list`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({})
-      });
-
-      const data = await response.json();
+      if (!mcpSessionId) {
+        await mcpRequest('initialize', {
+          protocolVersion: '2024-11-05',
+          capabilities: {},
+          clientInfo: { name: 'mellipoker-ai', version: '1.0.0' }
+        });
+      }
+      const data = await mcpRequest('resources/list', {}, mcpSessionId || undefined);
       res.json(data);
     } catch (error) {
       console.error('MCP resources list error:', error);
@@ -103,15 +141,14 @@ export async function registerRoutes(
   app.post('/api/mcp/resources/read', async (req, res) => {
     try {
       const { uri } = req.body;
-      const response = await fetch(`${MCP_SERVER_URL}/resources/read`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uri })
-      });
-
-      const data = await response.json();
+      if (!mcpSessionId) {
+        await mcpRequest('initialize', {
+          protocolVersion: '2024-11-05',
+          capabilities: {},
+          clientInfo: { name: 'mellipoker-ai', version: '1.0.0' }
+        });
+      }
+      const data = await mcpRequest('resources/read', { uri }, mcpSessionId || undefined);
       res.json(data);
     } catch (error) {
       console.error('MCP resource read error:', error);
